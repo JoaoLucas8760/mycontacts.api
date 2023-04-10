@@ -18,11 +18,22 @@ class ContactController {
     response.json(contact);
   }
 
-  store() {}
+  async store(request, response) {}
 
   update() {}
 
-  delete() {}
+  async delete(request, response) {
+    const { id } = request.params;
+
+    const contact = await ContactsRepository.findById(id);
+
+    if (!contact) {
+      return response.status(404).json({ error: "User not found" });
+    }
+
+    await ContactsRepository.delete(id);
+    response.sendStatus(204);
+  }
 }
 
 module.exports = new ContactController();
